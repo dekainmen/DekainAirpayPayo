@@ -171,7 +171,7 @@ exports.createPayment = async (order) => {
     iso_currency: "inr",
     currency_code: "356",
     merchant_id,
-    mer_dom: Buffer.from("dekainmen.shop").toString("base64")
+    mer_dom: Buffer.from("http://localhost").toString("base64")
   };
 
   // WP plugin sorts keys before JSON stringification for encdata
