@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Airpay Payment Gateway</title>
+	<script type="text/javascript">
+		var merchantDetails;
+		var chmod;
+
+		// please enter the pgcc/pgdcc/nb in the following chmod value
+		chmod = '';
+
+		// please enter merchant value below
+
+		// merchantDetails = {
+		//     'username' : '1919255', // Username
+		//     'password' :  '698kL4l7', // Password
+		//     'secret' : '4dBE183R725a9', // API key
+		//     'mercid' : '245' //Merchant ID 
+		// };
+
+		// merchantDetails = {
+		//  'username' : '4083701', // Username
+		//     'password' :  'S3TVzjln', // Password
+		//     'secret' : 'd895Q31YW6247', // API key
+		//     'mercid' : '243' //Merchant ID 
+		// };
+
+		// merchantDetails = {
+		//     'username' : '2374952', // Username
+		//     'password' : 'EpSl3xNJ', // Password
+		//     'secret' : 'RbVqe3xTjiwvlYCB', // API key
+		//     'mercid' : '18999' //Merchant ID 
+		// };
+
+		// merchantDetails = {
+		//     'username' : '8419743', // Username
+		//     'password' : 'JRLcAz5Y', // Password
+		//     'secret' : '74QpNYaT1oyqhxdL', // API key
+		//     'mercid' : '1' //Merchant ID 
+		// };
+		merchantDetails = {
+			'username': '', // Username
+			'password': '', // Password
+			'secret': '', // API key
+			'mercid': '' //Merchant ID 
+		};
+
+	</script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<script type="text/javascript" src='jquery-1.9.0.min.js'></script>
+	<script type="text/javascript" src='./orsozed-sha256.jquery.plugin-71a3f05/scripts/sha256.jquery.debug.js'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" crossorigin="anonymous"
+		referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/aes.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/enc-hex.min.js"
+		integrity="sha512-jDU0YCduSP8z0cvjfPFm7/zN/viOcmNWlq0GUIcjVhuv4WoKcMppghamg4aeuBtJaA0wjtYfxwQjPpVuYGEsBA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" src='./JavaScript-MD5-master/js/md5.min.js'></script>
+	<script type="text/javascript" src="./validation.js"></script>
+	<script type="text/javascript" src="./main.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.18.0/js/md5.min.js"></script>
+	<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,600&family=Roboto:wght@300;400;700&display=swap"
+		rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="contentbody">
+			<div class="lside">
+
+				<div class="lsidewrap">
+					<div class="logo"><img src="airpay-text-wh.svg"></div>
+					<div class="coverimg"><img src="coverimg.png"></div>
+				</div>
+			</div>
+			<div class="rside">
+				<div class="formwrap container-fluid">
+					<form class="form-horizontal main-transaction-form" id="userform" method="post">
+						<div class="row">
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Email<font color="red">*</font></label>
+									<input type="text" id="buyerEmail" name="buyerEmail" 
+										onkeypress="changecolor(this.id,'buyerEmailspan')" maxlength="50">
+									<span id="buyerEmailspan" name="buyerEmailspan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Phone<font color="red">*</font></label>
+									<input type="text" id="buyerPhone" name="buyerPhone" 
+										onkeypress="changecolor(this.id,'buyerPhonespan')" maxlength="15">
+									<span id="buyerPhonespan" name="buyerPhonespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer First Name<font color="red">*</font></label>
+									<input type="text" id="buyerFirstName" name="buyerFirstName" 
+										onkeypress="changecolor(this.id,'buyerFirstNamespan')" maxlength="50">
+									<span id="buyerFirstNamespan" name="buyerFirstNamespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Last Name<font color="red">*</font></label>
+									<input type="text" id="buyerLastName" name="buyerLastName" 
+										onkeypress="changecolor(this.id,'buyerLastNamespan')" maxlength="50">
+									<span id="buyerLastNamespan" name="buyerLastNamespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Address</label>
+									<input type="text" id="buyerAddress" name="buyerAddress" maxlength="255"
+										onkeypress="changecolor(this.id,'buyerAddressspan')">
+									<span id="buyerAddressspan" name="buyerAddressspan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer City</label>
+									<input type="text" id="buyerCity" name="buyerCity" maxlength="50"
+										onkeypress="changecolor(this.id,'buyerCityspan')">
+									<span id="buyerCityspan" name="buyerCityspan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer State</label>
+									<input type="text" id="buyerState" name="buyerState" maxlength="50"
+										onkeypress="changecolor(this.id,'buyerStatespan')">
+									<span id="buyerStatespan" name="buyerStatespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Country</label>
+									<input type="text" id="buyerCountry" name="buyerCountry" maxlength="50"
+										onkeypress="changecolor(this.id,'buyerCountryspan')">
+									<span id="buyerCountryspan" name="buyerCountryspan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Buyer Pincode</label>
+									<input type="text" id="buyerPinCode" name="buyerPinCode" maxlength="8"
+										onkeypress="changecolor(this.id,'buyerPinCodespan')">
+									<span id="buyerPinCodespan" name="buyerPinCodespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+						</div>
+						<hr>
+						</hr>
+						<div class="row">
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Order ID<font color="red">*</font></label>
+									<input type="text" id="orderid" name="orderid" 
+										onkeypress="changecolor(this.id,'orderidspan')">
+									<span id="orderidspan" name="orderidspan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Amount<font color="red">*</font></label>
+									<input type="text" id="amount" name="amount" 
+										onkeypress="changecolor(this.id,'amountspan')">
+									<span id="amountspan" name="amountspan" style="display:none" class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Custom Field 1</label>
+									<input type="text" id="customvar" name="customvar"
+										onkeypress="changecolor(this.id,'customspan')">
+									<span id="customspan" name="customspan" style="display:none" class="makeRed"></span>
+								</div>
+							</div>
+						</div>
+						<hr>
+						</hr>
+						<div class="row">
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Sub Type</label>
+									<input type="text" id="subtype" name="txnsubtype" maxlength="5">
+									<span id="subtypespan" name="subtypespan" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Transaction Wallet<font color="red">*</font></label>
+									<input type="text" id="wallet" name="wallet"
+										onkeypress="changecolor(this.id,'customspan')"> e.g value will be 1
+									<span id="customspan1" name="customspan1" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Transaction Currency<font color="red">*</font></label>
+									<input type="text" id="currency" name="currency"
+										onkeypress="changecolor(this.id,'customspan')" value="356" readonly> e.g value will be
+									840 for USD
+									<span id="customspan1" name="customspan1" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-lg-4">
+								<div class="form-group">
+									<label>Transaction isoCurrency<font color="red">*</font></label>
+									<input type="text" id="isocurrency" name="isocurrency"
+										onkeypress="changecolor(this.id,'customspan')" value="INR" readonly> e.g value will be
+									INR,USD
+									<span id="customspan1" name="customspan1" style="display:none"
+										class="makeRed"></span>
+								</div>
+							</div>
+
+
+						</div>
+						<hr>
+						</hr>
+
+						<div>
+							<br>
+							<div>
+								<button type="submit" class="btn" id="payhere" onclick="validate();">Pay
+									Here</button>
+							</div>
+						</div>
+
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		.makeRed {
+			color: red;
+		}
+	</style>
+
+
+</body>
+
+</html>

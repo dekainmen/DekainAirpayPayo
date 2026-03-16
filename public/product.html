@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Product | Dekain</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme:{
+extend:{
+colors:{
+brand:{
+bg:"#F5F1EC",
+cream:"#EFE7DE",
+brown:"#8B5E3C",
+dark:"#4A3426",
+charcoal:"#1F1F1F",
+border:"#D6CFC7"
+}
+}
+}
+}
+}
+</script>
+
+</head>
+
+<body class="bg-brand-bg text-brand-dark">
+
+
+<!-- HEADER -->
+
+<header class="bg-brand-charcoal text-white">
+
+<div class="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
+
+<h1 class="text-xl font-semibold tracking-wide cursor-pointer"
+onclick="window.location.href='/'">
+DEKAIN
+</h1>
+
+<nav class="hidden md:flex space-x-8 text-sm font-medium">
+
+<a href="/category.html?cat=Clothing">Clothing</a>
+<a href="/category.html?cat=Ethnics">Ethnics</a>
+<a href="/category.html?cat=Footwear">Footwear</a>
+<a href="/category.html?cat=Grooming">Grooming</a>
+<a href="/category.html?cat=Watches">Watches</a>
+<a href="/category.html?cat=Accessories">Accessories</a>
+
+</nav>
+
+<a href="/cart.html"
+class="border border-white px-4 py-2 rounded-lg bg-white text-black">
+Cart 🛒
+</a>
+
+</div>
+
+</header>
+
+
+
+<!-- PDP -->
+
+<div class="max-w-6xl mx-auto px-8 py-14">
+
+<div class="grid md:grid-cols-2 gap-10 items-start">
+
+
+<img id="image"
+class="w-full rounded-xl border border-brand-border object-cover"/>
+
+
+<div>
+
+<h1 id="name"
+class="text-2xl font-medium mb-4"></h1>
+
+<p id="price"
+class="text-xl text-brand-brown mb-2"></p>
+
+<p id="category"
+class="text-sm text-gray-600 mb-6"></p>
+
+
+
+<!-- SIZE SELECTOR -->
+
+<div class="mb-6">
+
+<p class="text-sm font-medium mb-2">
+Select Size
+</p>
+
+<div id="sizeOptions" class="flex gap-3"></div>
+
+</div>
+
+
+
+<!-- BUTTONS -->
+
+<div class="flex gap-4">
+
+<button id="addToCartBtn"
+class="bg-brand-brown text-white px-6 py-3 rounded-lg hover:bg-brand-dark transition">
+
+Add to Cart
+
+</button>
+
+<button onclick="goToCart()"
+class="border border-brand-brown text-brand-brown px-6 py-3 rounded-lg hover:bg-brand-brown hover:text-white transition">
+
+Go to Cart
+
+</button>
+
+</div>
+
+
+
+<!-- TRUST INFO -->
+
+<div class="mt-8 bg-brand-cream border border-brand-border p-5 rounded-lg space-y-3 text-sm">
+
+<p class="flex items-center gap-2">
+<span>✔</span>
+<span>100% Original Products</span>
+</p>
+
+<p class="flex items-center gap-2">
+<span>🚚</span>
+<span>Pay on delivery might be available</span>
+</p>
+
+<p class="flex items-center gap-2">
+<span>🔁</span>
+<span>Easy 21 days exchanges</span>
+</p>
+
+<p class="text-gray-600">
+This item is only exchangeable for the same or a different size, if available, and cannot be returned.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer class="bg-brand-cream border-t border-brand-border mt-16">
+
+<div class="max-w-7xl mx-auto px-8 py-12 grid md:grid-cols-4 gap-10 text-sm">
+
+
+<div>
+
+<h3 class="font-semibold mb-4">ONLINE SHOPPING</h3>
+
+<ul class="space-y-2">
+<li><a href="/category.html?cat=Clothing">Clothing</a></li>
+<li><a href="/category.html?cat=Footwear">Footwear</a></li>
+<li><a href="/category.html?cat=Accessories">Accessories</a></li>
+<li><a href="/category.html?cat=Watches">Watches</a></li>
+<li><a href="/category.html?cat=Grooming">Grooming</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">CUSTOMER POLICIES</h3>
+
+<ul class="space-y-2">
+<li><a href="/contact.html">Contact Us</a></li>
+<li><a href="/faq.html">FAQ</a></li>
+<li><a href="/shipping.html">Shipping</a></li>
+<li><a href="/returns.html">Returns</a></li>
+<li><a href="/privacy.html">Privacy Policy</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">USEFUL LINKS</h3>
+
+<ul class="space-y-2">
+<li><a href="/about.html">About Us</a></li>
+<li><a href="/bulk-orders.html">Bulk Orders</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">SHOP WITH CONFIDENCE</h3>
+
+<div class="space-y-3 text-gray-700">
+
+<p>✔ 100% Original Products</p>
+<p>🔁 Easy 21 day exchanges</p>
+<p>🚚 Cash on Delivery available for selected products</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="border-t border-brand-border text-center py-4 text-sm">
+
+© 2026 Dekain. All rights reserved.
+
+</div>
+
+</footer>
+
+
+
+<script>
+
+const params=new URLSearchParams(window.location.search)
+const id=params.get("id")
+
+let currentProduct=null
+let selectedSize=null
+
+
+/* CATEGORY SIZE MAP */
+
+const SIZE_MAP={
+
+Clothing:["S","M","L","XL","XXL"],
+
+Ethnics:["S","M","L","XL","XXL"],
+
+Footwear:["6","7","8","9","10","11"],
+
+Accessories:["One Size"],
+
+Watches:["One Size"],
+
+Grooming:["One Size"]
+
+}
+
+
+function renderSizes(sizes){
+
+const container=document.getElementById("sizeOptions")
+container.innerHTML=""
+
+if(sizes.length===1 && sizes[0]==="One Size"){
+
+container.innerHTML=`<p class="text-sm border border-brand-border px-4 py-2 rounded inline-block">
+One Size
+</p>`
+
+selectedSize="One Size"
+return
+}
+
+sizes.forEach(size=>{
+
+const btn=document.createElement("button")
+
+btn.className=`border border-brand-border px-4 py-2 rounded hover:bg-brand-brown hover:text-white transition`
+
+btn.innerText=size
+
+btn.onclick=()=>{
+
+document.querySelectorAll("#sizeOptions button")
+.forEach(b=>b.classList.remove("bg-brand-brown","text-white"))
+
+btn.classList.add("bg-brand-brown","text-white")
+
+selectedSize=size
+
+}
+
+container.appendChild(btn)
+
+})
+
+}
+
+
+
+async function loadPDP(){
+
+try{
+
+const res=await fetch(`/api/products/${id}`)
+if(!res.ok) throw new Error()
+
+const p=await res.json()
+
+currentProduct=p
+
+document.getElementById("name").innerText=p.name
+document.getElementById("image").src=p.image
+document.getElementById("price").innerText="₹"+p.price
+
+document.getElementById("category").innerText=
+p.category+" / "+p.subcategory
+
+
+const sizes=p.sizes || SIZE_MAP[p.category] || ["One Size"]
+
+renderSizes(sizes)
+
+}catch{
+
+document.body.innerHTML="<h2>Product not found</h2>"
+
+}
+
+}
+
+
+
+document.getElementById("addToCartBtn")
+.addEventListener("click",()=>{
+
+if(!currentProduct) return
+
+if(!selectedSize){
+
+alert("Please select size")
+return
+
+}
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[]
+
+const existing=cart.find(item=>
+String(item.id)===String(currentProduct.id)
+&& item.size===selectedSize
+)
+
+if(existing){
+
+existing.qty+=1
+
+}else{
+
+cart.push({
+id:currentProduct.id,
+name:currentProduct.name,
+price:currentProduct.price,
+image:currentProduct.image,
+size:selectedSize,
+qty:1
+})
+
+}
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+alert("Added to cart")
+
+})
+
+
+function goToCart(){
+
+window.location.href="/cart.html"
+
+}
+
+
+loadPDP()
+
+</script>
+
+</body>
+</html>

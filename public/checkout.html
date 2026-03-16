@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Checkout | Dekain</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+theme:{
+extend:{
+colors:{
+brand:{
+bg:"#F5F1EC",
+cream:"#EFE7DE",
+brown:"#8B5E3C",
+dark:"#4A3426",
+charcoal:"#1F1F1F",
+border:"#D6CFC7"
+}
+}
+}
+}
+}
+</script>
+
+</head>
+
+<body class="bg-brand-bg text-brand-dark flex flex-col min-h-screen">
+
+<!-- HEADER -->
+
+<header class="bg-brand-charcoal text-white">
+
+<div class="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
+
+<h1 class="text-xl font-semibold tracking-wide cursor-pointer"
+onclick="window.location.href='/'">
+DEKAIN
+</h1>
+
+<nav class="hidden md:flex space-x-8 text-sm font-medium">
+<a href="/category.html?cat=Clothing">Clothing</a>
+<a href="/category.html?cat=Ethnics">Ethnics</a>
+<a href="/category.html?cat=Footwear">Footwear</a>
+<a href="/category.html?cat=Grooming">Grooming</a>
+<a href="/category.html?cat=Watches">Watches</a>
+<a href="/category.html?cat=Accessories">Accessories</a>
+<a href="/bulk-orders.html">Bulk Orders</a>
+<a href="/about.html">About Us</a>
+</nav>
+
+<a href="/cart.html" class="border border-white px-4 py-2 rounded-lg">
+Cart 🛒
+</a>
+
+</div>
+
+</header>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="flex-grow">
+
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 p-8">
+
+<!-- CUSTOMER -->
+
+<div>
+
+<h2 class="text-2xl font-light mb-6">
+Customer Details
+</h2>
+
+<div class="space-y-4">
+
+<input id="name" placeholder="Full Name"
+class="w-full p-3 border rounded-lg bg-white"/>
+
+<input id="email" placeholder="Email"
+class="w-full p-3 border rounded-lg bg-white"/>
+
+<input id="phone" placeholder="Phone"
+class="w-full p-3 border rounded-lg bg-white"/>
+
+<textarea id="address" placeholder="Address"
+class="w-full p-3 border rounded-lg bg-white"></textarea>
+
+</div>
+
+</div>
+
+
+
+<!-- SUMMARY -->
+
+<div>
+
+<h2 class="text-2xl font-light mb-6">
+Order Summary
+</h2>
+
+<div id="summary" class="space-y-3 mb-6"></div>
+
+<h3 id="total" class="text-xl font-semibold mb-6"></h3>
+
+
+<!-- PAYMENT METHOD -->
+
+<div class="mb-4">
+
+<label class="block mb-2 font-medium">
+Select Payment Method
+</label>
+
+<div class="flex gap-4">
+
+<label>
+<input type="radio" name="paymentMethod" value="custom" checked>
+Pay0
+</label>
+
+<label>
+<input type="radio" name="paymentMethod" value="airpay">
+Airpay
+</label>
+
+</div>
+
+</div>
+
+
+<button id="payBtn"
+onclick="payNow()"
+class="w-full bg-brand-brown text-white py-3 rounded-lg">
+
+Pay Now
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+/* LOAD CART */
+
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const container = document.getElementById("summary");
+
+let total = 0;
+
+if(cart.length === 0){
+
+container.innerHTML = "<p>Cart empty</p>";
+document.getElementById("payBtn").disabled = true;
+
+}else{
+
+cart.forEach(item => {
+
+const itemTotal = item.price * item.qty;
+total += itemTotal;
+
+container.innerHTML += `
+<div class="flex justify-between p-3 border rounded-lg">
+<p>${item.name} × ${item.qty}</p>
+<p>₹${itemTotal}</p>
+</div>
+`;
+
+});
+
+}
+
+document.getElementById("total").innerText = "Total: ₹" + total;
+
+
+
+/* PAYMENT FUNCTION */
+
+async function payNow(){
+
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const phone = document.getElementById("phone").value;
+
+const provider = document.querySelector(
+'input[name="paymentMethod"]:checked'
+).value;
+
+if(!name || !phone){
+
+alert("Name & phone required");
+return;
+
+}
+
+document.getElementById("payBtn").innerText = "Processing...";
+
+const payload = {
+provider,
+products: cart,
+customer: { name, email, phone }
+};
+
+try{
+
+const res = await fetch("/api/payment/create",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify(payload)
+});
+
+const data = await res.json();
+
+console.log("PAYMENT RESPONSE:",data);
+
+
+/* CUSTOM GATEWAY */
+
+if(data.paymentUrl){
+
+window.location.href = data.paymentUrl;
+return;
+
+}
+
+
+/* AIRPAY FORM */
+
+if(data.type === "form"){
+
+const form = document.createElement("form");
+form.method = data.method;
+form.action = data.action;
+
+Object.keys(data.fields).forEach(key => {
+
+const input = document.createElement("input");
+input.type = "hidden";
+input.name = key;
+input.value = data.fields[key];
+
+form.appendChild(input);
+
+});
+
+document.body.appendChild(form);
+form.submit();
+
+return;
+
+}
+
+
+/* FALLBACK */
+
+alert("Payment failed");
+document.getElementById("payBtn").innerText = "Pay Now";
+
+}catch(err){
+
+console.error(err);
+alert("Error initiating payment");
+document.getElementById("payBtn").innerText = "Pay Now";
+
+}
+
+}
+
+</script>
+
+
+
+<!-- FOOTER -->
+
+<footer class="bg-brand-cream border-t border-brand-border">
+
+<div class="max-w-7xl mx-auto px-8 py-12 grid md:grid-cols-4 gap-10 text-sm">
+
+<div>
+
+<h3 class="font-semibold mb-4">
+ONLINE SHOPPING
+</h3>
+
+<ul class="space-y-2">
+<li><a href="/category.html?cat=Clothing">Clothing</a></li>
+<li><a href="/category.html?cat=Footwear">Footwear</a></li>
+<li><a href="/category.html?cat=Accessories">Accessories</a></li>
+<li><a href="/category.html?cat=Watches">Watches</a></li>
+<li><a href="/category.html?cat=Grooming">Grooming</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">
+CUSTOMER POLICIES
+</h3>
+
+<ul class="space-y-2">
+<li><a href="/contact.html">Contact Us</a></li>
+<li><a href="/faq.html">FAQ</a></li>
+<li><a href="/shipping.html">Shipping</a></li>
+<li><a href="/returns.html">Returns</a></li>
+<li><a href="/privacy.html">Privacy Policy</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">
+USEFUL LINKS
+</h3>
+
+<ul class="space-y-2">
+<li><a href="/about.html">About Us</a></li>
+<li><a href="/bulk-orders.html">Bulk Orders</a></li>
+</ul>
+
+</div>
+
+
+<div>
+
+<h3 class="font-semibold mb-4">
+SHOP WITH CONFIDENCE
+</h3>
+
+<p>✔ 100% Original Products</p>
+<p>🔁 Easy 21 day exchanges</p>
+<p>🚚 Cash on Delivery available</p>
+
+</div>
+
+</div>
+
+<div class="border-t border-brand-border text-center py-4 text-sm">
+© 2026 Dekain. All rights reserved.
+</div>
+
+</footer>
+
+
+</body>
+</html>

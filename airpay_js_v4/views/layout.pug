@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='description', content='Some description')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title= "Airpay"
+    script.
+      function submitForm() {
+          var form = document.forms[0];
+          form.submit();
+      }
+      function updateUrlWithoutQueryParams() {
+          var updatedUrl = window.location.pathname; // Get the current path without query parameters
+          window.history.replaceState({}, '', updatedUrl);
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+          updateUrlWithoutQueryParams();
+      });
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/custom.css')
+  body
+    .wrapper
+      .contentbody
+        .lside
+          .lsidewrap
+            .logo
+              img(src="/images/airpay-text-wh.svg")
+            .coverimg
+              img(src="/images/coverimg.png")
+        block content
