@@ -66,7 +66,7 @@ app.use(
  * Always sends user to homepage
  */
 
-app.all("/payment-return", (req, res) => {
+app.all("/payment/return", (req, res) => {
 
   console.log("=================================");
   console.log("PAYMENT RETURN HIT");
