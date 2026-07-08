@@ -1,0 +1,75 @@
+extends layout
+ 
+block content
+  .rside
+    .formwrap.container-fluid
+      if txnhash == txndata && TRANSACTIONSTATUS == "200"
+        table(style='border-collapse: collapse; width: 50%;')
+          tr  
+            td(class='tdsuccess', colspan='2', style='text-align: left; color: green; font-size: 20px; padding: 8px;')
+              b SUCCESS TRANSACTION
+          tr  
+            td(style='text-align: left; padding: 8px; margin-right: 10px; font-size: 17px;')
+              b Variable Name
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              b Value
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | TRANSACTIONID:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{TRANSACTIONID}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | APTRANSACTIONID:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{APTRANSACTIONID}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | AMOUNT:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{AMOUNT}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | MESSAGE:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{MESSAGE}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | CUSTOMVAR:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{CUSTOMVAR}
+      else
+        table(style='border-collapse: collapse; width: 50%;')
+          tr  
+            td(class='tdfail', colspan='2', style='text-align: left; color: red; font-size: 20px; padding: 8px;')
+              b FAILED TRANSACTION
+          tr  
+            td(style='text-align: left; padding: 8px; margin-right: 10px; font-size: 17px;')
+              b Variable Name
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              b Value
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | TRANSACTIONID:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{TRANSACTIONID}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | APTRANSACTIONID:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{APTRANSACTIONID}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | AMOUNT:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{AMOUNT}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | MESSAGE:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{MESSAGE}
+          tr  
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | CUSTOMVAR:
+            td(style='text-align: left; padding: 8px; font-size: 17px;')
+              | #{CUSTOMVAR}

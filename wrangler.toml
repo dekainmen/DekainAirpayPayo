@@ -1,0 +1,8 @@
+name = "dekain-backend"
+main = "server.js"
+compatibility_date = "2024-12-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dekain-db"
+database_id = "a99700f6-ed33-41b6-ac34-e22e95eed6e9"
