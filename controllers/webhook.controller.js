@@ -26,6 +26,12 @@ exports.airpayWebhook = async (req, res) => {
 
     const order = typeof existing === "string" ? JSON.parse(existing) : existing;
 
+    // Skip COD orders - webhooks should not affect COD orders
+    if (order.payment_method === "cod") {
+      console.log("Skipping webhook for COD order:", orderId);
+      return res.send("Webhook processed (COD order skipped)");
+    }
+
     // Update order status
     // status 200 is success in Airpay
     if (String(status) === "200") {
@@ -47,4 +53,4 @@ exports.airpayWebhook = async (req, res) => {
     console.error("WEBHOOK ERROR:", err.message);
     res.status(500).send("Webhook failed");
   }
-};
+};

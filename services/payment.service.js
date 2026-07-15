@@ -3,14 +3,13 @@ console.log(
   process.env.PAYTOKEN
 );
 
-
 require("dotenv").config();
 
 const axios = require("axios");
 const qs = require("querystring");
 
-const airpayService = require("./airpay.service"); 
-// adjust path if inside /payments folder
+const airpayService = require("./airpay.service");
+const cashfreeService = require("./cashfree.service");
 
 /**
  * Create Payment Order
@@ -18,10 +17,38 @@ const airpayService = require("./airpay.service");
 async function createOrder(payload) {
 
   try {
-     if (payload.provider === "airpay") {
+
+    /**
+     * COD - Cash on Delivery
+     */
+    if (payload.provider === "cod") {
+      console.log("Routing to COD");
+      return {
+        status: "SUCCESS",
+        provider: "cod",
+        order_id: payload.order_id
+      };
+    }
+
+    /**
+     * AIRPAY
+     */
+    if (payload.provider === "airpay") {
       console.log("Routing to AIRPAY");
       return await airpayService.createPayment(payload);
     }
+
+    /**
+     * CASHFREE
+     */
+    if (payload.provider === "cashfree") {
+      console.log("Routing to CASHFREE");
+      return await cashfreeService.createPayment(payload);
+    }
+
+    /**
+     * Existing Gateway
+     */
 
     /**
      * ENV Validation
@@ -97,7 +124,7 @@ async function createOrder(payload) {
     return {
       status: "SUCCESS",
       paymentUrl:
-        response.data.result.payment_url ||
+        response.data.result?.payment_url ||
         response.data.payment_link ||
         response.data.redirect_url
     };

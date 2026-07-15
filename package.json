@@ -15,6 +15,7 @@
     "@cloudflare/kv-asset-handler": "^0.4.2",
     "axios": "^1.13.6",
     "body-parser": "^2.2.2",
+    "cashfree-pg": "^6.0.4",
     "crypto": "^1.0.1",
     "csvtojson": "^2.0.14",
     "dotenv": "^17.3.1",
@@ -23,6 +24,5 @@
   },
   "directories": {
     "doc": "docs"
-  },
-  "devDependencies": {}
+  }
 }

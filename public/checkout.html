@@ -4,6 +4,7 @@
 <title>Checkout | Dekain</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 
 <script>
 tailwind.config = {
@@ -106,37 +107,35 @@ Order Summary
 
 <h3 id="total" class="text-xl font-semibold mb-6"></h3>
 
+<!-- PAYMENT METHOD -->
 
-<!-- PAYMENT METHOD
+<div class="mb-6">
 
-<div class="mb-4">
-
-<label class="block mb-2 font-medium">
+<label class="block mb-3 font-medium">
 Select Payment Method
 </label>
 
-<div class="flex gap-4">
+<div class="space-y-3">
 
-<label>
-<input type="radio" name="paymentMethod" value="custom" checked>
-Pay0
-</label>
+<!-- <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+<input type="radio" name="paymentMethod" value="cashfree" checked class="w-4 h-4">
+<span>Online Payment (Cashfree)</span>
+</label> -->
 
-<label>
-<input type="radio" name="paymentMethod" value="airpay">
-Airpay
+<label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+<input type="radio" name="paymentMethod" value="cod" class="w-4 h-4">
+<span>Cash on Delivery (COD)</span>
 </label>
 
 </div>
 
-</div> -->
-
+</div>
 
 <button id="payBtn"
 onclick="payNow()"
 class="w-full bg-brand-brown text-white py-3 rounded-lg">
 
-Pay Now
+Place Order
 
 </button>
 
@@ -149,6 +148,10 @@ Pay Now
 
 
 <script>
+
+const cashfree = Cashfree({
+    mode: "production" // change to "sandbox" for testing
+});
 
 /* LOAD CART */
 
@@ -192,9 +195,9 @@ const name = document.getElementById("name").value;
 const email = document.getElementById("email").value;
 const phone = document.getElementById("phone").value;
 
-const provider = document.querySelector(
-'input[name="paymentMethod"]:checked'
-).value;
+// Get selected payment method
+const paymentMethodEl = document.querySelector('input[name="paymentMethod"]:checked');
+const provider = paymentMethodEl ? paymentMethodEl.value : "cashfree";
 
 if(!name || !phone){
 
@@ -223,19 +226,32 @@ const data = await res.json();
 
 console.log("PAYMENT RESPONSE:",data);
 
+/* CASHFREE FLOW */
+if(data.success && data.provider === "cashfree"){
+    await cashfree.checkout({
+        paymentSessionId: data.payment_session_id,
+        redirectTarget: "_self"
+    });
+    return;
+}
 
-
+/* COD FLOW */
+if(data.success && data.provider === "cod"){
+    // Redirect to success page directly
+    window.location.href = `/success.html?order_id=${data.order_id}`;
+    return;
+}
 
 /* FALLBACK */
 
-alert("Payment failed");
-document.getElementById("payBtn").innerText = "Pay Now";
+alert(data.message || "Payment failed");
+document.getElementById("payBtn").innerText = "Place Order";
 
 }catch(err){
 
 console.error(err);
 alert("Error initiating payment");
-document.getElementById("payBtn").innerText = "Pay Now";
+document.getElementById("payBtn").innerText = "Place Order";
 
 }
 

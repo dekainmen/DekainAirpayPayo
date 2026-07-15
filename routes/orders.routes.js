@@ -10,6 +10,14 @@ const ordersController =
   );
 
 /**
+ * Get all orders (admin)
+ */
+router.get(
+  "/",
+  ordersController.getAllOrders
+);
+
+/**
  * Get single order
  */
 router.get(

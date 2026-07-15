@@ -68,11 +68,11 @@ Cart 🛒
 
 <div class="bg-brand-cream border border-brand-border p-10 rounded-xl text-center shadow-lg max-w-md">
 
-<h2 class="text-3xl font-light mb-4 text-green-700">
+<h2 id="successTitle" class="text-3xl font-light mb-4 text-green-700">
 Payment Successful
 </h2>
 
-<p class="mb-4">
+<p id="successMessage" class="mb-4">
 Your order has been placed successfully.
 </p>
 
@@ -173,6 +173,19 @@ if(orderId){
 
 document.getElementById("orderId").innerText =
 "Order ID: " + orderId
+
+// Fetch order details to check payment method
+fetch(`/api/orders/${orderId}`)
+  .then(res => res.json())
+  .then(order => {
+    if (order.payment_method === "cod") {
+      document.getElementById("successTitle").innerText = "Order Placed Successfully";
+      document.getElementById("successMessage").innerText = "Your order has been placed successfully. Pay cash on delivery.";
+    }
+  })
+  .catch(err => {
+    console.error("Error fetching order:", err);
+  });
 
 }
 

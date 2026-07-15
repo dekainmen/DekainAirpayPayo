@@ -75,6 +75,17 @@ module.exports =
         : existing;
 
     /**
+     * Skip COD orders - webhooks should not affect COD orders
+     */
+    if (order.payment_method === "cod") {
+      console.log(
+        "Skipping webhook for COD order:",
+        order_id
+      );
+      return res.send("Webhook processed (COD order skipped)");
+    }
+
+    /**
      * Normalize gateway status
      */
     const normalized =
